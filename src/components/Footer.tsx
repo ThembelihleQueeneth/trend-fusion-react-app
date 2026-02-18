@@ -2,64 +2,103 @@ import { motion } from "framer-motion";
 import { ArrowRight, Zap } from "lucide-react";
 import geckoOne from "../assets/gecko_one.jfif";
 
-const Footer = () => (
-  <footer className="border-t border-border">
-    {/* CTA Section */}
-    <section className="py-24 relative overflow-hidden">
-      {/* Floating gecko in CTA */}
-      <motion.div
-        animate={{ y: [0, -15, 0], rotate: [8, 12, 8] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute right-[5%] md:right-[10%] top-[15%] z-0 opacity-25 md:opacity-40 pointer-events-none"
-      >
-        <img src={geckoOne} alt="" className="w-24 md:w-36 rounded-2xl" />
-      </motion.div>
+const Footer = () => {
+  return (
+    <footer className="bg-black text-white relative overflow-hidden">
 
-      <div className="container mx-auto px-6 text-center relative z-10">
+      {/* Background Glow */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-600/30 blur-[120px] rounded-full" />
+        <div className="absolute bottom-10 right-10 w-80 h-80 bg-pink-600/20 blur-[120px] rounded-full" />
+      </div>
+
+      {/* ================= CTA ================= */}
+      <section className="py-28 relative">
+
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          animate={{ y: [0, -12, 0] }}
+          transition={{ duration: 4, repeat: Infinity }}
+          className="absolute right-[10%] top-[20%] opacity-30 pointer-events-none"
         >
-          <span className="sticker-badge mb-6">💚 IT'S FREE</span>
-          <h2 className="font-display text-4xl md:text-6xl lg:text-7xl text-foreground mt-6 mb-6">
-            START <span className="text-gradient-neon">TRACKING</span>
-            <br />
-            TODAY
-          </h2>
-          <p className="text-muted-foreground font-body max-w-md mx-auto mb-8">
-            Join 2.5M+ users who trust TrendFusion for real-time crypto intelligence.
-          </p>
-          <button className="group inline-flex items-center gap-2 px-10 py-5 font-display text-sm bg-primary text-primary-foreground rounded-full neon-glow hover:brightness-110 transition-all">
-            GET STARTED FREE
-            <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-          </button>
+          <img
+            src={geckoOne}
+            alt=""
+            className="w-28 md:w-36 rounded-2xl"
+          />
         </motion.div>
-      </div>
-    </section>
 
-    {/* Footer links */}
-    <div className="container mx-auto px-6 py-8 border-t border-border">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
-          <Zap className="h-4 w-4 text-primary" />
-          <span className="font-display text-sm text-foreground">
-            TREND<span className="text-primary">FUSION</span>
-          </span>
+        <div className="container mx-auto px-6 text-center">
+
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+          >
+            <h2 className="text-5xl md:text-7xl font-bold tracking-tight">
+              START{" "}
+              <span className="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+                TRACKING
+              </span>
+              <br />
+              TODAY
+            </h2>
+
+            <p className="text-gray-400 mt-6 max-w-md mx-auto">
+              Join millions of users who trust TrendFusion for real-time crypto insights.
+            </p>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="mt-10 inline-flex items-center gap-3 px-10 py-4 rounded-full 
+              bg-gradient-to-r from-purple-600 to-pink-600 
+              hover:from-purple-500 hover:to-pink-500 
+              transition-all duration-300 shadow-lg"
+            >
+              GET STARTED
+              <ArrowRight className="h-4 w-4" />
+            </motion.button>
+          </motion.div>
         </div>
-        <div className="flex gap-6 text-sm text-muted-foreground font-body">
-          <a href="#" className="hover:text-primary transition-colors">Privacy</a>
-          <a href="#" className="hover:text-primary transition-colors">Terms</a>
-          <a href="#" className="hover:text-primary transition-colors">API</a>
-          <a href="#" className="hover:text-primary transition-colors">Discord</a>
-        </div>
-        <div className="text-xs text-muted-foreground font-body">
-          © 2026 TrendFusion. Powered by CoinGecko API.
+      </section>
+
+      {/* Divider */}
+      <div className="h-px bg-white/10" />
+
+      {/* ================= LINKS ================= */}
+      <div className="container mx-auto px-6 py-12">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+
+          {/* Logo */}
+          <div className="flex items-center gap-2">
+            <Zap className="h-5 w-5 text-purple-500" />
+            <span className="font-semibold tracking-wide">
+              TREND<span className="text-purple-500">FUSION</span>
+            </span>
+          </div>
+
+          {/* Links */}
+          <div className="flex gap-8 text-sm text-gray-400">
+            {["Privacy", "Terms", "API", "Discord"].map((item) => (
+              <a
+                key={item}
+                href="#"
+                className="hover:text-white transition"
+              >
+                {item}
+              </a>
+            ))}
+          </div>
+
+          {/* Copyright */}
+          <div className="text-xs text-gray-500 text-center md:text-right">
+            © 2026 TrendFusion. All rights reserved.
+          </div>
         </div>
       </div>
-    </div>
-  </footer>
-);
+    </footer>
+  );
+};
 
 export default Footer;
