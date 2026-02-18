@@ -8,8 +8,8 @@ const Footer = () => {
 
       {/* Background Glow */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-purple-600/30 blur-[120px] rounded-full" />
-        <div className="absolute bottom-10 right-10 w-80 h-80 bg-pink-600/20 blur-[120px] rounded-full" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-green-600/30 blur-[120px] rounded-full" />
+        <div className="absolute bottom-10 right-10 w-80 h-80 bg-green-400/20 blur-[120px] rounded-full" />
       </div>
 
       {/* ================= CTA ================= */}
@@ -37,7 +37,7 @@ const Footer = () => {
           >
             <h2 className="text-5xl md:text-7xl font-bold tracking-tight">
               START{" "}
-              <span className="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-green-400 to-green-600 bg-clip-text text-transparent">
                 TRACKING
               </span>
               <br />
@@ -52,8 +52,8 @@ const Footer = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="mt-10 inline-flex items-center gap-3 px-10 py-4 rounded-full 
-              bg-gradient-to-r from-purple-600 to-pink-600 
-              hover:from-purple-500 hover:to-pink-500 
+              bg-gradient-to-r from-green-600 to-green-500 
+              hover:from-green-500 hover:to-green-400 
               transition-all duration-300 shadow-lg"
             >
               GET STARTED
@@ -72,9 +72,9 @@ const Footer = () => {
 
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <Zap className="h-5 w-5 text-purple-500" />
+            <Zap className="h-5 w-5 text-green-500" />
             <span className="font-semibold tracking-wide">
-              TREND<span className="text-purple-500">FUSION</span>
+              TREND<span className="text-green-500">FUSION</span>
             </span>
           </div>
 

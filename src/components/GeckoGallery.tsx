@@ -1,13 +1,11 @@
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { useState, useRef } from "react";
 
-// ─── Replace these with your actual imports ───────────────────────────────────
 import geckoOne from "../assets/gecko_one.jfif";
 import geckoTwo from "../assets/gecko_two.jfif";
 import geckoThree from "../assets/gecko_five.jfif";
 import geckoFour from "../assets/gecko_four.jfif";
 import geckoFive from "../assets/gecko_five.jfif";
-// ─────────────────────────────────────────────────────────────────────────────
 
 const geckos = [
   { src: geckoOne,   name: "GAMER GECKO",  tag: "🎮 DEGEN",   rarity: "RARE",      accent: "#00ffe0", rank: "#1" },
