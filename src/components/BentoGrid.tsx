@@ -1,6 +1,13 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { TrendingUp, TrendingDown, Flame, Star, BarChart3, PieChart } from "lucide-react";
+import {
+  TrendingUp,
+  TrendingDown,
+  Flame,
+  Star,
+  BarChart3,
+  PieChart,
+} from "lucide-react";
 import geckoThree from "../assets/gecko_three.jfif";
 import geckoFive from "../assets/gecko_five.jfif";
 
@@ -13,75 +20,96 @@ const coins = [
 
 const BentoGrid = () => {
   const ref = useRef<HTMLDivElement>(null);
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const y1 = useTransform(scrollYProgress, [0, 1], [100, -50]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [150, -30]);
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: (i: number) => ({
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, delay: i * 0.1, ease: "easeOut" as const },
-    }),
-  };
+  const y1 = useTransform(scrollYProgress, [0, 1], [60, -40]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [80, -20]);
+
+  const cardBase =
+    "rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-xl p-6 hover:scale-[1.02] transition-all duration-500";
 
   return (
-    <section ref={ref} className="py-20 relative">
+    <section ref={ref} className="py-28 bg-black text-white relative overflow-hidden">
+
+      {/* 🌌 Background Glow */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-20 left-10 w-96 h-96 bg-purple-600/20 blur-[140px] rounded-full" />
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-pink-600/20 blur-[140px] rounded-full" />
+      </div>
+
       <div className="container mx-auto px-6">
+
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <span className="sticker-badge mb-4">⚡ LIVE DATA</span>
-          <h2 className="font-display text-4xl md:text-6xl text-foreground mt-6">
-            MARKET <span className="text-gradient-neon">PULSE</span>
+          <span className="text-xs uppercase tracking-widest text-purple-400">
+            ⚡ Live Data
+          </span>
+
+          <h2 className="text-5xl md:text-7xl font-bold mt-6">
+            MARKET{" "}
+            <span className="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+              PULSE
+            </span>
           </h2>
-          <p className="text-muted-foreground font-body mt-4 max-w-lg mx-auto">
+
+          <p className="text-gray-400 mt-6 max-w-lg mx-auto">
             Everything you need. One dashboard. Zero noise.
           </p>
         </motion.div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-[200px]">
-          {/* Trending Coins - spans 2 cols, 2 rows */}
+        {/* Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-[220px]">
+
+          {/* Trending */}
           <motion.div
-            custom={0}
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
+            className={`${cardBase} md:col-span-2 md:row-span-2 flex flex-col`}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bento-item md:col-span-2 md:row-span-2 flex flex-col"
           >
-            <div className="flex items-center gap-2 mb-4">
-              <Flame className="h-5 w-5 text-primary" />
-              <h3 className="font-display text-lg text-foreground">TRENDING NOW</h3>
+            <div className="flex items-center gap-2 mb-6 text-purple-400">
+              <Flame className="h-5 w-5" />
+              <h3 className="font-semibold tracking-wide">TRENDING NOW</h3>
             </div>
-            <div className="flex-1 flex flex-col gap-3">
+
+            <div className="flex flex-col gap-4">
               {coins.map((coin) => (
                 <div
                   key={coin.symbol}
-                  className="flex items-center justify-between p-3 rounded-xl bg-secondary/50 hover:bg-secondary transition-colors"
+                  className="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 transition"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-display text-primary text-lg">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold">
                       {coin.icon}
                     </div>
                     <div>
-                      <div className="font-body font-semibold text-foreground">{coin.name}</div>
-                      <div className="text-xs text-muted-foreground font-body">{coin.symbol}</div>
+                      <div className="font-semibold">{coin.name}</div>
+                      <div className="text-xs text-gray-400">{coin.symbol}</div>
                     </div>
                   </div>
+
                   <div className="text-right">
-                    <div className="font-body font-semibold text-foreground">{coin.price}</div>
-                    <div className={`text-xs font-body flex items-center gap-1 ${coin.up ? 'text-primary' : 'text-destructive'}`}>
-                      {coin.up ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                    <div className="font-semibold">{coin.price}</div>
+                    <div
+                      className={`text-xs flex items-center gap-1 ${
+                        coin.up ? "text-green-400" : "text-red-400"
+                      }`}
+                    >
+                      {coin.up ? (
+                        <TrendingUp className="h-3 w-3" />
+                      ) : (
+                        <TrendingDown className="h-3 w-3" />
+                      )}
                       {coin.change}
                     </div>
                   </div>
@@ -92,103 +120,103 @@ const BentoGrid = () => {
 
           {/* Market Cap */}
           <motion.div
-            custom={1}
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
             style={{ y: y1 }}
-            className="bento-item parallax-layer flex flex-col justify-between"
+            className={`${cardBase} flex flex-col justify-between`}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
           >
-            <div className="flex items-center gap-2">
-              <PieChart className="h-5 w-5 text-lime" />
-              <span className="font-display text-sm text-foreground">MARKET CAP</span>
+            <div className="flex items-center gap-2 text-purple-400">
+              <PieChart className="h-5 w-5" />
+              <span className="text-sm">MARKET CAP</span>
             </div>
+
             <div>
-              <div className="font-display text-3xl text-foreground">$3.2T</div>
-              <div className="text-sm text-primary font-body flex items-center gap-1">
+              <div className="text-3xl font-bold">$3.2T</div>
+              <div className="text-sm text-green-400 flex items-center gap-1">
                 <TrendingUp className="h-3 w-3" /> +1.8% today
               </div>
             </div>
           </motion.div>
 
-          {/* 24h Volume */}
+          {/* Volume */}
           <motion.div
-            custom={2}
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
             style={{ y: y2 }}
-            className="bento-item parallax-layer flex flex-col justify-between"
+            className={`${cardBase} flex flex-col justify-between`}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
           >
-            <div className="flex items-center gap-2">
-              <BarChart3 className="h-5 w-5 text-cyber" />
-              <span className="font-display text-sm text-foreground">24H VOLUME</span>
+            <div className="flex items-center gap-2 text-pink-400">
+              <BarChart3 className="h-5 w-5" />
+              <span className="text-sm">24H VOLUME</span>
             </div>
+
             <div>
-              <div className="font-display text-3xl text-foreground">$142B</div>
-              <div className="text-sm text-primary font-body">across 800+ exchanges</div>
-            </div>
-          </motion.div>
-
-          {/* Gecko mascot card */}
-          <motion.div
-            custom={3}
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="bento-item relative overflow-hidden flex items-end p-0"
-          >
-            <img src={geckoThree} alt="TrendFusion Gecko mascot" className="absolute inset-0 w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-            <div className="relative z-10 p-4">
-              <span className="sticker-badge text-[10px]">🦎 MASCOT</span>
-            </div>
-          </motion.div>
-
-          {/* Fear & Greed - spans 2 cols */}
-          <motion.div
-            custom={4}
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="bento-item lg:col-span-2 flex items-center gap-6"
-          >
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                <Star className="h-5 w-5 text-accent" />
-                <span className="font-display text-sm text-foreground">FEAR & GREED INDEX</span>
-              </div>
-              <div className="font-display text-5xl text-gradient-neon">72</div>
-              <div className="text-sm text-muted-foreground font-body mt-1">Market sentiment: Greed 🟢</div>
-            </div>
-            <div className="hidden sm:block">
-              <div className="w-32 h-32 rounded-full border-4 border-primary/30 flex items-center justify-center relative">
-                <div className="w-24 h-24 rounded-full border-4 border-primary/60 flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center">
-                    <span className="font-display text-xl text-primary">72</span>
-                  </div>
-                </div>
+              <div className="text-3xl font-bold">$142B</div>
+              <div className="text-sm text-gray-400">
+                across 800+ exchanges
               </div>
             </div>
           </motion.div>
 
-          {/* Gecko logo card */}
+          {/* Mascot */}
           <motion.div
-            custom={5}
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="bento-item relative overflow-hidden flex items-center justify-center p-0 group"
+            className="relative rounded-3xl overflow-hidden shadow-xl"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
           >
-            <img src={geckoFive} alt="Gecko logo" className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity group-hover:scale-105 transition-transform duration-500" />
-            <div className="absolute inset-0 bg-background/30" />
-            <div className="relative z-10">
-              <span className="sticker-badge text-[10px]">🦎 POWERED BY GECKO</span>
+            <img
+              src={geckoThree}
+              alt="Gecko mascot"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+            <div className="absolute bottom-4 left-4 text-sm bg-purple-500/20 px-3 py-1 rounded-full backdrop-blur-md">
+              🦎 MASCOT
+            </div>
+          </motion.div>
+
+          {/* Fear & Greed */}
+          <motion.div
+            className={`${cardBase} lg:col-span-2 flex items-center justify-between`}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+          >
+            <div>
+              <div className="flex items-center gap-2 text-yellow-400 mb-2">
+                <Star className="h-5 w-5" />
+                <span className="text-sm">FEAR & GREED INDEX</span>
+              </div>
+
+              <div className="text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+                72
+              </div>
+
+              <div className="text-gray-400 mt-2">
+                Market sentiment: Greed 🟢
+              </div>
+            </div>
+
+            <div className="hidden sm:flex w-32 h-32 rounded-full border border-purple-500/30 items-center justify-center">
+              <div className="w-20 h-20 rounded-full bg-purple-500/20 flex items-center justify-center text-xl font-bold text-purple-400">
+                72
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Logo Card */}
+          <motion.div
+            className="relative rounded-3xl overflow-hidden shadow-xl group"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+          >
+            <img
+              src={geckoFive}
+              alt="Gecko"
+              className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-110 transition duration-700"
+            />
+            <div className="absolute inset-0 bg-black/40" />
+            <div className="absolute bottom-4 left-4 text-xs bg-purple-500/20 px-3 py-1 rounded-full backdrop-blur-md">
+              🦎 POWERED BY GECKO
             </div>
           </motion.div>
         </div>
