@@ -1,5 +1,5 @@
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
-import { useState, useRef } from "react";
+import {  useRef } from "react";
 
 import geckoOne from "../assets/gecko_one.jfif";
 import geckoTwo from "../assets/gecko_two.jfif";
