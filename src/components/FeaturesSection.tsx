@@ -28,62 +28,108 @@ const features = [
 
 const FeaturesSection = () => {
   const ref = useRef<HTMLDivElement>(null);
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const bgY = useTransform(scrollYProgress, [0, 1], [0, -80]);
-  const geckoY = useTransform(scrollYProgress, [0, 1], [60, -60]);
+
+  const bgY = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const geckoY = useTransform(scrollYProgress, [0, 1], [80, -80]);
 
   return (
-    <section ref={ref} className="py-24 relative overflow-hidden">
-      {/* Parallax background element */}
+    <section
+      ref={ref}
+      className="relative py-32 overflow-hidden bg-gradient-to-b from-black via-[#06110c] to-black"
+    >
+      {/* Background Glow */}
       <motion.div
         style={{ y: bgY }}
-        className="absolute -top-20 right-0 w-96 h-96 rounded-full opacity-10 parallax-layer"
-        aria-hidden
-      >
-        <div className="w-full h-full rounded-full" style={{ background: "var(--gradient-glow)" }} />
-      </motion.div>
+        className="absolute top-1/4 right-[-200px] w-[600px] h-[600px] rounded-full bg-green-500/10 blur-3xl"
+      />
 
-      {/* Floating gecko decoration */}
+      {/* Floating Gecko */}
       <motion.div
         style={{ y: geckoY }}
-        className="absolute -left-10 md:left-8 top-1/2 -translate-y-1/2 z-0 opacity-20 md:opacity-30 pointer-events-none"
+        className="absolute left-[-60px] md:left-10 top-1/2 -translate-y-1/2 opacity-20 pointer-events-none"
       >
-        <img src={geckoTwo} alt="" className="w-32 md:w-48 rounded-3xl rotate-[-12deg]" />
+        <img
+          src={geckoTwo}
+          alt=""
+          className="w-40 md:w-56 rounded-3xl rotate-[-10deg]"
+        />
       </motion.div>
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
+
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          transition={{ duration: 0.6 }}
+          className="text-center mb-20"
         >
-          <span className="sticker-badge">🚀 FEATURES</span>
-          <h2 className="font-display text-4xl md:text-6xl text-foreground mt-6">
-            WHY <span className="text-gradient-neon">TRENDFUSION</span>?
+          <span className="px-5 py-2 rounded-full text-black font-semibold text-sm 
+                           bg-gradient-to-r from-green-400 to-lime-400
+                           shadow-[0_0_20px_rgba(34,197,94,0.6)]">
+            🚀 FEATURES
+          </span>
+
+          <h2 className="mt-8 text-5xl md:text-7xl font-extrabold tracking-tight text-white">
+            WHY{" "}
+            <span className="bg-gradient-to-r from-green-400 to-lime-400 
+                             bg-clip-text text-transparent 
+                             drop-shadow-[0_0_20px_rgba(34,197,94,0.4)]">
+              TRENDFUSION
+            </span>
+            ?
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        {/* Feature Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
           {features.map((f, i) => (
             <motion.div
               key={f.title}
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 60 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.15 }}
-              className="bento-item group cursor-default"
+              className="relative group p-8 rounded-3xl 
+                         bg-white/5 backdrop-blur-xl 
+                         border border-white/10 
+                         hover:border-green-400/50
+                         transition-all duration-300"
             >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:neon-glow transition-all">
-                <f.icon className="h-6 w-6 text-primary" />
+              {/* Neon Hover Glow */}
+              <div className="absolute inset-0 rounded-3xl 
+                              opacity-0 group-hover:opacity-100 
+                              bg-gradient-to-r from-green-500/10 to-lime-400/10 
+                              blur-xl transition duration-500" />
+
+              {/* Icon */}
+              <div className="relative z-10 w-14 h-14 rounded-2xl 
+                              bg-green-500/10 
+                              flex items-center justify-center mb-6
+                              group-hover:shadow-[0_0_25px_rgba(34,197,94,0.6)]
+                              transition-all duration-300">
+                <f.icon className="h-7 w-7 text-green-400" />
               </div>
-              <h3 className="font-display text-lg text-foreground mb-2">{f.title}</h3>
-              <p className="text-sm text-muted-foreground font-body">{f.desc}</p>
+
+              {/* Title */}
+              <h3 className="relative z-10 text-xl font-bold text-white mb-3">
+                {f.title}
+              </h3>
+
+              {/* Description */}
+              <p className="relative z-10 text-gray-400 text-sm leading-relaxed">
+                {f.desc}
+              </p>
             </motion.div>
           ))}
+
         </div>
       </div>
     </section>
