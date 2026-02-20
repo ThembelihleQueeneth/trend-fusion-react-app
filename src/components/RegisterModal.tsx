@@ -1,15 +1,16 @@
 import { useState } from "react";
 
+
 interface RegisterModalProps {
-  isOpen?: boolean;
-  onClose?: () => void;
-  onLoginClick?: () => void;
+  isOpen: boolean;
+  onClose: () => void;
+  onSwitchToLogin: () => void;  
 }
 
 export default function RegisterModal({
   isOpen = true,
   onClose,
-  onLoginClick,
+  onSwitchToLogin,
 }: RegisterModalProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -362,7 +363,7 @@ export default function RegisterModal({
 
           <div className="rm-footer">
             Have an account?{" "}
-            <button className="rm-login-link" onClick={onLoginClick} type="button">
+            <button className="rm-login-link" onClick={onSwitchToLogin} type="button">
               Log in
             </button>
           </div>

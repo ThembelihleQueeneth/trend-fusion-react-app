@@ -1,31 +1,46 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface LoginModalProps {
   isOpen?: boolean;
   onClose?: () => void;
-  onRegisterClick?: () => void;
+  onSwitchToRegister?: () => void;
 }
+
+// Demo credentials
+const DEMO_EMAIL = "demo@gmail.com";
+const DEMO_PASSWORD = "12345678";
 
 export default function LoginModal({
   isOpen = true,
   onClose,
-  onRegisterClick,
+  onSwitchToRegister,
 }: LoginModalProps) {
+  // ✅ All hooks must be at the top — before any early returns
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Early return AFTER hooks
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-    // Simulate API call
-    await new Promise((res) => setTimeout(res, 1200));
-    setIsLoading(false);
-    // Example: setError("Invalid email or password.");
+
+    await new Promise((res) => setTimeout(res, 800));
+
+    if (email === DEMO_EMAIL && password === DEMO_PASSWORD) {
+      setIsLoading(false);
+      onClose?.();
+      navigate("/dashboard");
+    } else {
+      setIsLoading(false);
+      setError("Invalid demo credentials. Use demo@gmail.com / 12345678");
+    }
   };
 
   const handleGoogleLogin = () => {
@@ -119,8 +134,24 @@ export default function LoginModal({
         .lm-subtitle {
           font-size: 13.5px;
           color: #94a3b8;
-          margin-bottom: 32px;
+          margin-bottom: 20px;
           font-weight: 400;
+        }
+
+        .lm-demo-hint {
+          background: #f0f9ff;
+          border: 1px solid #bae6fd;
+          border-radius: 8px;
+          padding: 10px 14px;
+          margin-bottom: 24px;
+          font-size: 12.5px;
+          color: #0369a1;
+          font-family: 'Sora', sans-serif;
+          line-height: 1.6;
+        }
+
+        .lm-demo-hint strong {
+          font-weight: 600;
         }
 
         .lm-field {
@@ -322,6 +353,11 @@ export default function LoginModal({
               <h1 className="lm-title">Welcome back</h1>
               <p className="lm-subtitle">Log in to your account to continue</p>
 
+              {/* Demo credentials hint */}
+              <div className="lm-demo-hint">
+                🧪 <strong>Demo account:</strong> demo@gmail.com &nbsp;·&nbsp; 12345678
+              </div>
+
               <form onSubmit={handleSubmit}>
                 <div className="lm-field">
                   <div className="lm-label-row">
@@ -397,7 +433,7 @@ export default function LoginModal({
 
           <div className="lm-footer">
             Don't have an account?{" "}
-            <button className="lm-register-link" onClick={onRegisterClick} type="button">
+            <button className="lm-register-link" onClick={onSwitchToRegister} type="button">
               Sign up
             </button>
           </div>

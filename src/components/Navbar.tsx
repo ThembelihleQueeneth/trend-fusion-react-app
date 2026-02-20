@@ -9,13 +9,11 @@ const Navbar = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
 
-  // Handler to switch from login to register modal
   const handleSwitchToRegister = () => {
     setShowLogin(false);
     setShowRegister(true);
   };
 
-  // Handler to switch from register to login modal
   const handleSwitchToLogin = () => {
     setShowRegister(false);
     setShowLogin(true);
@@ -91,15 +89,15 @@ const Navbar = () => {
       </motion.nav>
 
       {/* Login Modal */}
-      <LoginModal 
-        isOpen={showLogin} 
+      <LoginModal
+        isOpen={showLogin}
         onClose={() => setShowLogin(false)}
         onSwitchToRegister={handleSwitchToRegister}
       />
 
-      {/* Register Modal */}
-      <RegisterModal 
-        isOpen={showRegister} 
+       {/* Register Modal */}
+      <RegisterModal
+        isOpen={showRegister}
         onClose={() => setShowRegister(false)}
         onSwitchToLogin={handleSwitchToLogin}
       />
