@@ -353,11 +353,6 @@ export default function LoginModal({
               <h1 className="lm-title">Welcome back</h1>
               <p className="lm-subtitle">Log in to your account to continue</p>
 
-              {/* Demo credentials hint */}
-              <div className="lm-demo-hint">
-                🧪 <strong>Demo account:</strong> demo@gmail.com &nbsp;·&nbsp; 12345678
-              </div>
-
               <form onSubmit={handleSubmit}>
                 <div className="lm-field">
                   <div className="lm-label-row">
