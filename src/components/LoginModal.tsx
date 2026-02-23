@@ -1,5 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
+import { auth, googleProvider } from "../firebase";
 
 interface LoginModalProps {
   isOpen?: boolean;
@@ -7,9 +12,7 @@ interface LoginModalProps {
   onSwitchToRegister?: () => void;
 }
 
-// Demo credentials
-const DEMO_EMAIL = "demo@gmail.com";
-const DEMO_PASSWORD = "12345678";
+
 
 export default function LoginModal({
   isOpen = true,
@@ -27,25 +30,49 @@ export default function LoginModal({
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
+  e.preventDefault();
+  setError("");
+  setIsLoading(true);
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+
+    onClose?.();
+    navigate("/dashboard");
+  } catch (err: any) {
+    console.error(err);
+
+    // Friendly Firebase errors
+    if (err.code === "auth/invalid-credential") {
+      setError("Invalid email or password.");
+    } else if (err.code === "auth/user-not-found") {
+      setError("No account found with this email.");
+    } else if (err.code === "auth/wrong-password") {
+      setError("Incorrect password.");
+    } else {
+      setError("Login failed. Please try again.");
+    }
+  } finally {
+    setIsLoading(false);
+  }
+};
+ 
+
+  const handleGoogleLogin = async () => {
+  try {
     setIsLoading(true);
 
-    await new Promise((res) => setTimeout(res, 800));
+    await signInWithPopup(auth, googleProvider);
 
-    if (email === DEMO_EMAIL && password === DEMO_PASSWORD) {
-      setIsLoading(false);
-      onClose?.();
-      navigate("/dashboard");
-    } else {
-      setIsLoading(false);
-      setError("Invalid demo credentials. Use demo@gmail.com / 12345678");
-    }
-  };
-
-  const handleGoogleLogin = () => {
-    console.log("Google login clicked");
-  };
+    onClose?.();
+    navigate("/dashboard");
+  } catch (err: any) {
+    console.error(err);
+    setError("Google sign-in failed.");
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <>

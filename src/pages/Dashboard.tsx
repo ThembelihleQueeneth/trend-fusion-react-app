@@ -16,6 +16,10 @@ import {
   Layers,
 } from "lucide-react";
 import { api } from "../api/coingecko";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import type { User } from "firebase/auth";
+import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -135,6 +139,32 @@ export default function Dashboard() {
   const [globalData, setGlobalData] = useState<GlobalData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+const [user, setUser] = useState<User | null>(null);
+const [authLoading, setAuthLoading] = useState(true);
+
+const handleLogout = async () => {
+  try {
+    await signOut(auth);
+    navigate("/");
+  } catch (err) {
+    console.error("Logout error:", err);
+  }
+};
+
+useEffect(() => {
+  const unsub = onAuthStateChanged(auth, (firebaseUser) => {
+    if (!firebaseUser) {
+      navigate("/"); // or "/login"
+    } else {
+      setUser(firebaseUser);
+    }
+    setAuthLoading(false);
+  });
+
+  return () => unsub();
+}, [navigate]);
 
   useEffect(() => {
     const fetchData = async () => {
