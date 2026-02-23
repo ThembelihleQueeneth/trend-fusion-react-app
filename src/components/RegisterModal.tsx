@@ -1,4 +1,9 @@
 import { useState } from "react";
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
+import { auth, googleProvider } from "../firebase";
 
 
 interface RegisterModalProps {
@@ -21,17 +26,35 @@ export default function RegisterModal({
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    // Simulate API call
-    await new Promise((res) => setTimeout(res, 1200));
+  e.preventDefault();
+  setIsLoading(true);
+
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+
+    alert("Account created successfully ");
+    onClose?.();
+  } catch (error: any) {
+    console.error(error);
+    alert(error.message);
+  } finally {
     setIsLoading(false);
-  };
+  }
+};
+ const handleGoogleSignUp = async () => {
+  try {
+    setIsLoading(true);
+    await signInWithPopup(auth, googleProvider);
 
-  const handleGoogleSignUp = () => {
-    console.log("Google sign up clicked");
-  };
-
+    alert("Signed up with Google ");
+    onClose?.();
+  } catch (error: any) {
+    console.error(error);
+    alert(error.message);
+  } finally {
+    setIsLoading(false);
+  }
+};
   return (
     <>
       <style>{`
