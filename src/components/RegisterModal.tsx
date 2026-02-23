@@ -2,8 +2,11 @@ import { useState } from "react";
 import {
   createUserWithEmailAndPassword,
   signInWithPopup,
+  GoogleAuthProvider,
 } from "firebase/auth";
-import { auth, googleProvider } from "../firebase";
+import { auth } from "../firebase";
+
+const googleProvider = new GoogleAuthProvider();
 
 
 interface RegisterModalProps {
