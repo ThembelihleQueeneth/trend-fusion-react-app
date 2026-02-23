@@ -78,7 +78,7 @@ export default function RegisterModal({
 
         .rm-top-bar {
           height: 5px;
-          background: linear-gradient(90deg, #1a6ed8 0%, #2d9cff 100%);
+          background: linear-gradient(90deg, #2aba40 0%, #2cd23f 100%);
         }
 
         .rm-body {
@@ -154,7 +154,7 @@ export default function RegisterModal({
         }
 
         .rm-input:focus {
-          border-color: #1a6ed8;
+          border-color: #2aba40;
           background: #fff;
           box-shadow: 0 0 0 3.5px rgba(26, 110, 216, 0.12);
         }
@@ -164,7 +164,7 @@ export default function RegisterModal({
         .rm-btn-primary {
           width: 100%;
           padding: 13px;
-          background: linear-gradient(135deg, #1a6ed8 0%, #1557b8 100%);
+          background: linear-gradient(135deg, #2aba40 0%, #2cd23f 100%);
           color: white;
           border: none;
           border-radius: 10px;
@@ -176,7 +176,7 @@ export default function RegisterModal({
           margin-bottom: 20px;
           letter-spacing: 0.01em;
           transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
-          box-shadow: 0 4px 14px rgba(26, 110, 216, 0.35);
+          box-shadow: 0 4px 14px rgba(20, 223, 64, 0.35);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -186,7 +186,7 @@ export default function RegisterModal({
 
         .rm-btn-primary:hover:not(:disabled) {
           transform: translateY(-1px);
-          box-shadow: 0 6px 20px rgba(26, 110, 216, 0.45);
+          box-shadow: 0 6px 20px rgba(20, 223, 64, 0.45);
         }
 
         .rm-btn-primary:active:not(:disabled) { transform: translateY(0); }
@@ -264,7 +264,7 @@ export default function RegisterModal({
         }
 
         .rm-login-link {
-          color: #1a6ed8;
+          color: #2aba40;
           font-weight: 600;
           cursor: pointer;
           background: none;
@@ -276,7 +276,7 @@ export default function RegisterModal({
           transition: color 0.15s;
         }
 
-        .rm-login-link:hover { color: #1557b8; text-decoration: underline; }
+        .rm-login-link:hover { color: #2aba40; text-decoration: underline; }
       `}</style>
 
       <div className="rm-overlay" onClick={(e) => e.target === e.currentTarget && onClose?.()}>
