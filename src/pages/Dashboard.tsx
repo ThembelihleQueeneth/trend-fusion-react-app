@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import {
   TrendingUp,
   Search,
-  Bell,
-  Settings,
   ChevronUp,
   ChevronDown,
   Globe,
@@ -15,7 +13,7 @@ import {
   DollarSign,
   Layers,
 } from "lucide-react";
-import { api } from "../api/coingecko"; // Ensure this axios instance is configured
+import { api } from "../api/coingecko"; 
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import type { User } from "firebase/auth";
 import { auth } from "../firebase";
@@ -82,37 +80,6 @@ const ChangeBadge = ({ val }: { val: number | null | undefined }) => {
   );
 };
 
-const Sparkline = ({ data, up }: { data: number[]; up: boolean }) => {
-  if (!data || data.length < 2) return <span className="text-slate-600 text-xs">—</span>;
-  const step = Math.ceil(data.length / 40);
-  const pts2 = data.filter((_, i) => i % step === 0);
-  const min = Math.min(...pts2);
-  const max = Math.max(...pts2);
-  const range = max - min || 1;
-  const w = 80, h = 32;
-  const coords = pts2.map((v, i) => {
-    const x = (i / (pts2.length - 1)) * w;
-    const y = h - ((v - min) / range) * (h - 2) - 1;
-    return `${x},${y}`;
-  });
-  const polyPts = coords.join(" ");
-  const fillPts = `${polyPts} ${w},${h} 0,${h}`;
-  const gradId = `sg-${up ? "u" : "d"}-${Math.random().toString(36).slice(2, 7)}`;
-
-  return (
-    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="overflow-visible">
-      <defs>
-        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={up ? "#34d399" : "#f87171"} stopOpacity="0.25" />
-          <stop offset="100%" stopColor={up ? "#34d399" : "#f87171"} stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <polygon points={fillPts} fill={`url(#${gradId})`} />
-      <polyline points={polyPts} fill="none" stroke={up ? "#34d399" : "#f87171"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-};
-
 const SkeletonRow = () => (
   <tr className="border-b border-white/4">
     {Array.from({ length: 5 }).map((_, i) => (
@@ -129,19 +96,17 @@ export default function Dashboard() {
   const [search, setSearch] = useState("");
   const [favorites, setFavorites] = useState<string[]>(["bitcoin", "ethereum"]);
   const [activeTab, setActiveTab] = useState<"all" | "favorites">("all");
-  const [sortBy, setSortBy] = useState<
-    "market_cap_rank" | "current_price" | "price_change_percentage_24h_in_currency" | "market_cap"
-  >("market_cap_rank");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const sortBy = "market_cap_rank" as const;
+  const sortDir = "asc" as const;
 
   const [coins, setCoins] = useState<Coin[]>([]);
   const [trending, setTrending] = useState<TrendingCoin[]>([]);
   const [globalData, setGlobalData] = useState<GlobalData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [, setError] = useState("");
 
   const navigate = useNavigate();
-  const [user, setUser] = useState<User | null>(null);
+  const [, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
 
   const handleLogout = async () => {
@@ -195,11 +160,6 @@ export default function Dashboard() {
 
   const toggleFavorite = (id: string) =>
     setFavorites(f => f.includes(id) ? f.filter(x => x !== id) : [...f, id]);
-
-  const handleSort = (col: typeof sortBy) => {
-    if (sortBy === col) setSortDir(d => d === "asc" ? "desc" : "asc");
-    else { setSortBy(col); setSortDir("asc"); }
-  };
 
   const filtered = coins
     .filter(c => activeTab === "favorites" ? favorites.includes(c.id) : true)

@@ -5,7 +5,7 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 import { auth } from "../firebase";
-import { Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, Loader2, AlertCircle, X } from "lucide-react";
 
 const googleProvider = new GoogleAuthProvider();
 
@@ -84,8 +84,9 @@ export default function RegisterModal({
           align-items: center;
           justify-content: center;
           z-index: 1000;
-          padding: 20px;
+          padding: 16px;
           animation: rm-fade-in 0.3s ease;
+          overflow-y: auto;
         }
 
         @keyframes rm-fade-in { from { opacity: 0; } to { opacity: 1; } }
@@ -96,6 +97,9 @@ export default function RegisterModal({
           border-radius: 24px;
           width: 100%;
           max-width: 440px;
+          max-height: calc(100vh - 32px);
+          display: flex;
+          flex-direction: column;
           overflow: hidden;
           box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
           animation: rm-slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -109,15 +113,20 @@ export default function RegisterModal({
 
         .rm-top-bar {
           height: 6px;
+          flex-shrink: 0;
           background: linear-gradient(90deg, #2aba40 0%, #2cd23f 100%);
         }
 
-        .rm-body { padding: 40px; }
+        .rm-body { 
+          padding: 32px; 
+          overflow-y: auto;
+          flex: 1;
+        }
 
         .rm-close {
           position: absolute;
-          top: 20px;
-          right: 20px;
+          top: 16px;
+          right: 16px;
           width: 32px;
           height: 32px;
           border: none;
@@ -129,15 +138,16 @@ export default function RegisterModal({
           align-items: center;
           justify-content: center;
           transition: all 0.2s;
+          z-index: 10;
         }
 
         .rm-close:hover { background: #e2e8f0; color: #0f172a; }
 
-        .rm-title { font-size: 26px; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; margin-bottom: 6px; }
+        .rm-title { font-size: 26px; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; margin-bottom: 6px; margin-top: 8px; }
         .rm-subtitle { font-size: 14px; color: #94a3b8; margin-bottom: 24px; }
 
-        .rm-field { margin-bottom: 18px; }
-        .rm-label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 8px; }
+        .rm-field { margin-bottom: 16px; }
+        .rm-label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
 
         .rm-input-wrap { position: relative; display: flex; align-items: center; }
 
@@ -161,7 +171,7 @@ export default function RegisterModal({
           box-shadow: 0 0 0 4px rgba(42, 186, 64, 0.1);
         }
 
-        .rm-input-error { border-color: #ef4444 !important; }
+        .rm-input-error { border-color: #ef4444 !important; background: #fffcfc; }
 
         .rm-toggle-btn {
           position: absolute;
@@ -185,6 +195,9 @@ export default function RegisterModal({
           font-size: 12px;
           font-weight: 500;
           margin-bottom: 16px;
+          padding: 8px 12px;
+          background: #fff5f5;
+          border-radius: 8px;
         }
 
         .rm-btn-primary {
@@ -197,21 +210,21 @@ export default function RegisterModal({
           font-size: 15px;
           font-weight: 600;
           cursor: pointer;
-          margin-bottom: 20px;
+          margin-bottom: 16px;
           transition: all 0.2s;
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 8px;
-          box-shadow: 0 4px 14px rgba(42, 186, 64, 0.3);
+          box-shadow: 0 4px 14px rgba(42, 186, 64, 0.2);
         }
 
-        .rm-btn-primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(42, 186, 64, 0.4); }
+        .rm-btn-primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(42, 186, 64, 0.3); }
         .rm-btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
 
-        .rm-divider { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .rm-divider { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
         .rm-line { flex: 1; height: 1px; background: #e9eef5; }
-        .rm-divider-text { font-size: 12px; color: #b0bac6; font-weight: 500; }
+        .rm-divider-text { font-size: 11px; color: #b0bac6; font-weight: 600; letter-spacing: 0.05em; }
 
         .rm-btn-google {
           width: 100%;
@@ -238,10 +251,18 @@ export default function RegisterModal({
           border-top: 1px solid #eef1f6;
           font-size: 14px;
           color: #6b7280;
+          flex-shrink: 0;
         }
 
         .rm-login-link { color: #2aba40; font-weight: 600; background: none; border: none; cursor: pointer; padding-left: 5px; }
         .rm-login-link:hover { text-decoration: underline; }
+
+        @media (max-width: 480px) {
+          .rm-overlay { padding: 12px; }
+          .rm-body { padding: 24px; }
+          .rm-title { font-size: 24px; }
+          .rm-card { border-radius: 20px; }
+        }
       `}</style>
 
       <div className="rm-overlay" onClick={(e) => e.target === e.currentTarget && onClose?.()}>
@@ -249,7 +270,9 @@ export default function RegisterModal({
           <div className="rm-top-bar" />
           <div className="rm-body">
             {onClose && (
-              <button className="rm-close" onClick={onClose}>×</button>
+              <button className="rm-close" onClick={onClose} aria-label="Close modal">
+                <X size={18} />
+              </button>
             )}
             
             <h1 className="rm-title">Create account</h1>
@@ -335,7 +358,7 @@ export default function RegisterModal({
               <div className="rm-line" />
             </div>
 
-            <button className="rm-btn-google" onClick={handleGoogleSignUp} type="button">
+            <button className="rm-btn-google" onClick={handleGoogleSignUp} type="button" disabled={isLoading}>
               <svg width="20" height="20" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>

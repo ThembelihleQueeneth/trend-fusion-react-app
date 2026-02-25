@@ -5,7 +5,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { auth, googleProvider } from "../firebase";
-import { Eye, EyeOff, AlertCircle, Loader2 } from "lucide-react";
+import { Eye, EyeOff, AlertCircle, Loader2, X } from "lucide-react";
 
 interface LoginModalProps {
   isOpen?: boolean;
@@ -38,7 +38,7 @@ export default function LoginModal({
       navigate("/dashboard");
     } catch (err: any) {
       console.error(err);
-      if (err.code === "auth/invalid-credential") {
+      if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password") {
         setError("Invalid email or password.");
       } else if (err.code === "auth/user-not-found") {
         setError("No account found with this email.");
@@ -79,8 +79,9 @@ export default function LoginModal({
           align-items: center;
           justify-content: center;
           z-index: 1000;
-          padding: 20px;
+          padding: 16px;
           animation: lm-fade-in 0.3s ease;
+          overflow-y: auto;
         }
 
         @keyframes lm-fade-in { from { opacity: 0; } to { opacity: 1; } }
@@ -91,6 +92,9 @@ export default function LoginModal({
           border-radius: 24px;
           width: 100%;
           max-width: 420px;
+          max-height: calc(100vh - 32px);
+          display: flex;
+          flex-direction: column;
           overflow: hidden;
           box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
           animation: lm-slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -104,15 +108,20 @@ export default function LoginModal({
 
         .lm-top-bar {
           height: 6px;
+          flex-shrink: 0;
           background: linear-gradient(90deg, #22c55e 0%, #84cc16 100%);
         }
 
-        .lm-body { padding: 40px; }
+        .lm-body { 
+          padding: 32px; 
+          overflow-y: auto;
+          flex: 1;
+        }
 
         .lm-close {
           position: absolute;
-          top: 20px;
-          right: 20px;
+          top: 16px;
+          right: 16px;
           width: 32px;
           height: 32px;
           border: none;
@@ -124,15 +133,16 @@ export default function LoginModal({
           align-items: center;
           justify-content: center;
           transition: all 0.2s;
+          z-index: 10;
         }
 
         .lm-close:hover { background: #e2e8f0; color: #0f172a; }
 
-        .lm-title { font-size: 28px; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; margin-bottom: 8px; }
-        .lm-subtitle { font-size: 14px; color: #64748b; margin-bottom: 32px; }
+        .lm-title { font-size: 26px; font-weight: 700; color: #0f172a; letter-spacing: -0.02em; margin-bottom: 8px; margin-top: 8px; }
+        .lm-subtitle { font-size: 14px; color: #64748b; margin-bottom: 28px; }
 
-        .lm-field { margin-bottom: 20px; }
-        .lm-label-row { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .lm-field { margin-bottom: 18px; }
+        .lm-label-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
         .lm-label { font-size: 13px; font-weight: 600; color: #334155; }
         
         .lm-forgot { 
@@ -155,7 +165,7 @@ export default function LoginModal({
         }
 
         .lm-input:focus { border-color: #22c55e; background: #fff; box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1); }
-        .lm-input-error { border-color: #ef4444 !important; }
+        .lm-input-error { border-color: #ef4444 !important; background: #fffcfc; }
 
         .lm-toggle-btn {
           position: absolute;
@@ -192,7 +202,7 @@ export default function LoginModal({
           font-size: 16px;
           font-weight: 600;
           cursor: pointer;
-          margin-top: 10px;
+          margin-top: 8px;
           transition: all 0.2s;
           display: flex;
           align-items: center;
@@ -203,7 +213,7 @@ export default function LoginModal({
         .lm-btn-primary:hover:not(:disabled) { background: #16a34a; transform: translateY(-1px); }
         .lm-btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
 
-        .lm-divider { display: flex; align-items: center; gap: 12px; margin: 24px 0; }
+        .lm-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
         .lm-line { flex: 1; height: 1px; background: #e2e8f0; }
         .lm-divider-text { font-size: 12px; color: #94a3b8; font-weight: 500; }
 
@@ -232,10 +242,18 @@ export default function LoginModal({
           font-size: 14px;
           color: #64748b;
           border-top: 1px solid #e2e8f0;
+          flex-shrink: 0;
         }
 
         .lm-link { color: #22c55e; font-weight: 600; background: none; border: none; cursor: pointer; padding: 0 4px; }
         .lm-link:hover { text-decoration: underline; }
+
+        @media (max-width: 480px) {
+          .lm-overlay { padding: 12px; }
+          .lm-body { padding: 24px; }
+          .lm-title { font-size: 24px; }
+          .lm-card { border-radius: 20px; }
+        }
       `}</style>
 
       <div className="lm-overlay" onClick={(e) => e.target === e.currentTarget && onClose?.()}>
@@ -244,8 +262,8 @@ export default function LoginModal({
           
           <div className="lm-body">
             {onClose && (
-              <button className="lm-close" onClick={onClose}>
-                <span style={{ fontSize: '20px' }}>&times;</span>
+              <button className="lm-close" onClick={onClose} aria-label="Close modal">
+                <X size={18} />
               </button>
             )}
 
@@ -308,7 +326,7 @@ export default function LoginModal({
               <div className="lm-line" />
             </div>
 
-            <button className="lm-btn-google" onClick={handleGoogleLogin} type="button">
+            <button className="lm-btn-google" onClick={handleGoogleLogin} type="button" disabled={isLoading}>
               <svg width="18" height="18" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
