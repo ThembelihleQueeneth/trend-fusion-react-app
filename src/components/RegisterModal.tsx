@@ -111,11 +111,7 @@ export default function RegisterModal({
           to { transform: translateY(0); opacity: 1; }
         }
 
-        .rm-top-bar {
-          height: 6px;
-          flex-shrink: 0;
-          background: linear-gradient(90deg, #2aba40 0%, #2cd23f 100%);
-        }
+       
 
         .rm-body { 
           padding: 32px; 
@@ -292,7 +288,7 @@ export default function RegisterModal({
                   <input
                     type="email"
                     className="rm-input"
-                    placeholder="you@example.com"
+                    placeholder="email@gmail.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -328,7 +324,7 @@ export default function RegisterModal({
                   <input
                     type={showConfirmPassword ? "text" : "password"}
                     className={`rm-input ${error === "Passwords do not match" ? "rm-input-error" : ""}`}
-                    placeholder="Repeat your password"
+                    placeholder="Confirm your password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required

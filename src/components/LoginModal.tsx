@@ -106,11 +106,7 @@ export default function LoginModal({
           to { transform: translateY(0); opacity: 1; }
         }
 
-        .lm-top-bar {
-          height: 6px;
-          flex-shrink: 0;
-          background: linear-gradient(90deg, #22c55e 0%, #84cc16 100%);
-        }
+        
 
         .lm-body { 
           padding: 32px; 
@@ -278,7 +274,7 @@ export default function LoginModal({
                 <input
                   type="email"
                   className={`lm-input ${error ? "lm-input-error" : ""}`}
-                  placeholder="name@company.com"
+                  placeholder="email@gmail.com"
                   value={email}
                   onChange={(e) => { setEmail(e.target.value); setError(""); }}
                   required
@@ -294,7 +290,7 @@ export default function LoginModal({
                   <input
                     type={showPassword ? "text" : "password"}
                     className={`lm-input ${error ? "lm-input-error" : ""}`}
-                    placeholder="••••••••"
+                    placeholder="Enter your password"
                     value={password}
                     onChange={(e) => { setPassword(e.target.value); setError(""); }}
                     required
