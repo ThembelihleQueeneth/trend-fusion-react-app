@@ -73,7 +73,7 @@ const FeaturesSection = () => {
           <span className="px-5 py-2 rounded-full text-black font-semibold text-sm 
                            bg-gradient-to-r from-green-400 to-lime-400
                            shadow-[0_0_20px_rgba(34,197,94,0.6)]">
-            🚀 FEATURES
+             FEATURES
           </span>
 
           <h2 className="mt-8 text-5xl md:text-7xl font-extrabold tracking-tight text-white">
