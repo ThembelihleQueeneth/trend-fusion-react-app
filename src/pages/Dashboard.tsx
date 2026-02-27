@@ -108,9 +108,21 @@ export default function Dashboard() {
   const [, setError] = useState("");
 
   const navigate = useNavigate();
-  const [, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const getInitials = (u: User) => {
+    if (u.displayName) {
+      const parts = u.displayName.trim().split(/\s+/);
+      return parts.length >= 2
+        ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+        : parts[0].slice(0, 2).toUpperCase();
+    }
+    return (u.email ?? "?")[0].toUpperCase();
+  };
+
+  const displayLabel = (u: User) => u.displayName ?? u.email ?? "User";
 
   const handleLogout = async () => {
     try {
@@ -208,7 +220,7 @@ export default function Dashboard() {
         <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');`}</style>
 
         {/* ── Sidebar/Bottom Nav ── */}
-        <aside className="fixed bottom-0 md:top-0 left-0 z-50 w-full md:w-16 h-16 md:h-full bg-[#0C1221] border-t md:border-t-0 md:border-r border-white/5 flex flex-row md:flex-col items-center justify-around md:justify-start py-0 md:py-6 gap-0 md:gap-6">
+        <aside className="fixed bottom-0 md:top-0 left-0 z-50 w-full md:w-16 h-16 md:h-full bg-[#0C1221] border-t md:border-t-0 md:border-r border-white/5 flex flex-row md:flex-col items-center justify-around md:justify-start py-0 md:py-6 gap-0 md:gap-6 ">
           <div className="hidden md:flex h-9 w-9 rounded-xl bg-emerald-500/20 border border-emerald-500/30 items-center justify-center mb-4">
             <Zap size={18} className="text-emerald-400" />
           </div>
@@ -222,8 +234,8 @@ export default function Dashboard() {
               <Icon size={20} />
             </button>
           ))}
-          <div className="md:mt-auto flex flex-row md:flex-col gap-4">
-            <button onClick={openLogoutModal} className="p-3 text-slate-500 hover:text-red-400"><LogOut size={20} /></button>
+          <div className="md:mt-auto flex flex-row md:flex-col gap-4 ">
+            <button onClick={openLogoutModal} className="p-3 text-slate-500 hover:text-red-400 cursor-pointer"><LogOut size={20} /></button>
           </div>
         </aside>
 
@@ -231,16 +243,34 @@ export default function Dashboard() {
         <div className="md:ml-16 min-h-screen">
           {/* Top Bar */}
           <header className="sticky top-0 z-40 bg-[#070B14]/80 backdrop-blur-xl border-b border-white/5 px-4 md:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center justify-between w-full sm:w-auto">
+            <div className="flex items-center justify-between w-full sm:w-auto gap-3">
               <h1 className="text-lg font-bold">Market</h1>
-              <div className="sm:hidden w-8 h-8 rounded-full bg-emerald-500/20" />
+              {user && (
+                <div className="flex items-center gap-2 sm:hidden">
+                  <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-[11px] font-bold text-emerald-400">
+                    {getInitials(user)}
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="relative w-full sm:w-64">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
-              <input
-                type="text" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-emerald-500/50"
-              />
+            <div className="flex items-center gap-4 w-full sm:w-auto">
+              <div className="relative w-full sm:w-64">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <input
+                  type="text" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-emerald-500/50"
+                />
+              </div>
+              {user && (
+                <div className="hidden sm:flex items-center gap-2.5 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5">
+                  <div className="w-7 h-7 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-[11px] font-bold text-emerald-400 shrink-0">
+                    {getInitials(user)}
+                  </div>
+                  <span className="text-sm font-medium text-slate-300 whitespace-nowrap max-w-[140px] truncate">
+                    {displayLabel(user)}
+                  </span>
+                </div>
+              )}
             </div>
           </header>
 
@@ -291,8 +321,8 @@ export default function Dashboard() {
             {/* Table */}
             <div className="bg-[#0C1221] border border-white/5 rounded-2xl overflow-hidden">
               <div className="p-4 border-b border-white/5 flex gap-2">
-                <button onClick={() => setActiveTab("all")} className={`px-4 py-1.5 rounded-lg text-xs font-bold ${activeTab === "all" ? "bg-emerald-500/20 text-emerald-400" : "text-slate-500"}`}>All</button>
-                <button onClick={() => setActiveTab("favorites")} className={`px-4 py-1.5 rounded-lg text-xs font-bold ${activeTab === "favorites" ? "bg-emerald-500/20 text-emerald-400" : "text-slate-500"}`}>Watchlist</button>
+                <button onClick={() => setActiveTab("all")} className={`px-4 py-1.5 rounded-lg text-xs font-bold ${activeTab === "all" ? "bg-emerald-500/20 text-emerald-400" : "text-slate-500 cursor-pointer"}`}>All</button>
+                <button onClick={() => setActiveTab("favorites")} className={`px-4 py-1.5 rounded-lg text-xs font-bold ${activeTab === "favorites" ? "bg-emerald-500/20 text-emerald-400" : "text-slate-500 cursor-pointer"}`}>Watchlist</button>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
@@ -301,7 +331,7 @@ export default function Dashboard() {
                       <th className="px-6 py-4 text-left w-12 cursor-pointer select-none" onClick={() => handleSort("market_cap_rank")}>
                         <span className="inline-flex items-center gap-1"># <SortIcon col="market_cap_rank" /></span>
                       </th>
-                      <th className="px-3 py-4 text-left">Asset</th>
+                      <th className="px-3 py-4 text-left ">Asset</th>
                       <th className="px-3 py-4 text-right cursor-pointer select-none" onClick={() => handleSort("current_price")}>
                         <span className="inline-flex items-center justify-end gap-1">Price <SortIcon col="current_price" /></span>
                       </th>

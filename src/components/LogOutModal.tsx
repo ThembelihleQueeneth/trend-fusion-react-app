@@ -36,7 +36,7 @@ export default function LogOutModal({ isOpen, onConfirm, onCancel }: LogOutModal
                 </div>
 
                 {/* Text */}
-                <h2 className="text-lg font-bold text-center text-white mb-1">Sign out?</h2>
+                <h2 className="text-lg font-bold text-center text-white mb-1">Are you sure you want to logout?</h2>
                 <p className="text-sm text-slate-400 text-center mb-6">
                     You'll need to sign in again to access your dashboard.
                 </p>
@@ -45,15 +45,15 @@ export default function LogOutModal({ isOpen, onConfirm, onCancel }: LogOutModal
                 <div className="flex gap-3">
                     <button
                         onClick={onCancel}
-                        className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10 transition-all"
+                        className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10 transition-all cursor-pointer"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={onConfirm}
-                        className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/20 transition-all"
+                        className="flex-1 py-2.5 rounded-xl text-sm font-semibold bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/20 transition-all cursor-pointer"
                     >
-                        Sign out
+                        Logout
                     </button>
                 </div>
             </div>
