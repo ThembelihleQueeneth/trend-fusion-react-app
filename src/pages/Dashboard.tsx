@@ -19,6 +19,8 @@ import type { User } from "firebase/auth";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import LogOutModal from "../components/LogOutModal";
+import CoinPriceChart from "../components/CoinPriceChart";
+import SparklineChart from "../components/SparklineChart";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -290,7 +292,11 @@ export default function Dashboard() {
                 ))}
             </div>
 
-            {/* Trending + Chart Row */}
+            {/* Price Chart */}
+            {!loading && coins.length > 0 && <CoinPriceChart coins={coins} />}
+            {loading && <div className="h-64 bg-white/5 rounded-2xl animate-pulse" />}
+
+            {/* Trending + Greed Row */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2 bg-[#0C1221] border border-white/5 rounded-2xl p-6">
                 <h3 className="text-sm font-semibold mb-4">Trending Today</h3>
@@ -304,7 +310,13 @@ export default function Dashboard() {
                           <p className="text-[10px] text-slate-500">#{t.item.market_cap_rank}</p>
                         </div>
                       </div>
-                      <Star size={14} className="text-slate-700" />
+                      <span className={`text-xs font-semibold px-2 py-0.5 rounded-lg ${(t.item.data?.price_change_percentage_24h?.usd ?? 0) >= 0
+                          ? "bg-emerald-400/10 text-emerald-400"
+                          : "bg-red-400/10 text-red-400"
+                        }`}>
+                        {(t.item.data?.price_change_percentage_24h?.usd ?? 0) >= 0 ? "+" : ""}
+                        {(t.item.data?.price_change_percentage_24h?.usd ?? 0).toFixed(2)}%
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -341,6 +353,7 @@ export default function Dashboard() {
                       <th className="px-3 py-4 text-right hidden md:table-cell cursor-pointer select-none" onClick={() => handleSort("market_cap")}>
                         <span className="inline-flex items-center justify-end gap-1">Market Cap <SortIcon col="market_cap" /></span>
                       </th>
+                      <th className="px-3 py-4 text-right hidden lg:table-cell">7D</th>
                       <th className="px-6 py-4 text-right"></th>
                     </tr>
                   </thead>
@@ -361,6 +374,14 @@ export default function Dashboard() {
                           <td className="px-3 py-5 text-right font-mono text-sm">{fmtPrice(coin.current_price)}</td>
                           <td className="px-3 py-5 text-right"><ChangeBadge val={coin.price_change_percentage_24h_in_currency} /></td>
                           <td className="px-3 py-5 text-right hidden md:table-cell font-mono text-xs text-slate-400">{fmt(coin.market_cap)}</td>
+                          <td className="px-3 py-5 text-right hidden lg:table-cell">
+                            {coin.sparkline_in_7d?.price?.length > 0 && (
+                              <SparklineChart
+                                prices={coin.sparkline_in_7d.price}
+                                positive={(coin.price_change_percentage_7d_in_currency ?? 0) >= 0}
+                              />
+                            )}
+                          </td>
                           <td className="px-6 py-5 text-right">
                             <button onClick={() => toggleFavorite(coin.id)} className={favorites.includes(coin.id) ? "text-amber-400" : "text-slate-700"}><Star size={14} fill={favorites.includes(coin.id) ? "currentColor" : "none"} /></button>
                           </td>
