@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: "https://api.coingecko.com/api/v3",
+  baseURL: import.meta.env.VITE_COINGECKO_BASE_URL ?? "https://api.coingecko.com/api/v3",
 });
