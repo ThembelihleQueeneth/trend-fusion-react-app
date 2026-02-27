@@ -113,6 +113,13 @@ export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [activeNav, setActiveNav] = useState("Home");
+
+  const scrollTo = (id: string, label: string) => {
+    setActiveNav(label);
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
 
   const getInitials = (u: User) => {
     if (u.displayName) {
@@ -227,12 +234,20 @@ export default function Dashboard() {
             <Zap size={18} className="text-emerald-400" />
           </div>
           {[
-            { icon: BarChart2, label: "Home", active: true },
-            { icon: TrendingUp, label: "Trending" },
-            { icon: Star, label: "List" },
-            { icon: Globe, label: "Data" },
-          ].map(({ icon: Icon, active }) => (
-            <button key={Math.random()} className={`p-3 rounded-xl transition-all ${active ? "bg-emerald-500/10 text-emerald-400" : "text-slate-500 hover:text-slate-200"}`}>
+            { icon: BarChart2, label: "Home", sectionId: "section-overview" },
+            { icon: TrendingUp, label: "Trending", sectionId: "section-chart" },
+            { icon: Star, label: "List", sectionId: "section-trending" },
+            { icon: Globe, label: "Data", sectionId: "section-table" },
+          ].map(({ icon: Icon, label, sectionId }) => (
+            <button
+              key={label}
+              onClick={() => scrollTo(sectionId, label)}
+              title={label}
+              className={`p-3 rounded-xl transition-all cursor-pointer ${activeNav === label
+                  ? "bg-emerald-500/10 text-emerald-400"
+                  : "text-slate-500 hover:text-slate-200"
+                }`}
+            >
               <Icon size={20} />
             </button>
           ))}
@@ -278,7 +293,7 @@ export default function Dashboard() {
 
           <main className="p-4 md:p-8 space-y-6">
             {/* Stats Grid */}
-            <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div id="section-overview" className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4">
               {loading ? Array.from({ length: 4 }).map((_, i) => <div key={i} className="h-28 bg-white/5 rounded-2xl animate-pulse" />)
                 : statsCards.map(({ label, value, badge, icon: Icon, up }) => (
                   <div key={label} className="bg-[#0C1221] border border-white/5 rounded-2xl p-5">
@@ -293,11 +308,13 @@ export default function Dashboard() {
             </div>
 
             {/* Price Chart */}
-            {!loading && coins.length > 0 && <CoinPriceChart coins={coins} />}
-            {loading && <div className="h-64 bg-white/5 rounded-2xl animate-pulse" />}
+            <div id="section-chart">
+              {!loading && coins.length > 0 && <CoinPriceChart coins={coins} />}
+              {loading && <div className="h-64 bg-white/5 rounded-2xl animate-pulse" />}
+            </div>
 
             {/* Trending + Greed Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div id="section-trending" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2 bg-[#0C1221] border border-white/5 rounded-2xl p-6">
                 <h3 className="text-sm font-semibold mb-4">Trending Today</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -311,8 +328,8 @@ export default function Dashboard() {
                         </div>
                       </div>
                       <span className={`text-xs font-semibold px-2 py-0.5 rounded-lg ${(t.item.data?.price_change_percentage_24h?.usd ?? 0) >= 0
-                          ? "bg-emerald-400/10 text-emerald-400"
-                          : "bg-red-400/10 text-red-400"
+                        ? "bg-emerald-400/10 text-emerald-400"
+                        : "bg-red-400/10 text-red-400"
                         }`}>
                         {(t.item.data?.price_change_percentage_24h?.usd ?? 0) >= 0 ? "+" : ""}
                         {(t.item.data?.price_change_percentage_24h?.usd ?? 0).toFixed(2)}%
@@ -331,7 +348,7 @@ export default function Dashboard() {
             </div>
 
             {/* Table */}
-            <div className="bg-[#0C1221] border border-white/5 rounded-2xl overflow-hidden">
+            <div id="section-table" className="bg-[#0C1221] border border-white/5 rounded-2xl overflow-hidden">
               <div className="p-4 border-b border-white/5 flex gap-2">
                 <button onClick={() => setActiveTab("all")} className={`px-4 py-1.5 rounded-lg text-xs font-bold ${activeTab === "all" ? "bg-emerald-500/20 text-emerald-400" : "text-slate-500 cursor-pointer"}`}>All</button>
                 <button onClick={() => setActiveTab("favorites")} className={`px-4 py-1.5 rounded-lg text-xs font-bold ${activeTab === "favorites" ? "bg-emerald-500/20 text-emerald-400" : "text-slate-500 cursor-pointer"}`}>Watchlist</button>
